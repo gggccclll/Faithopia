@@ -1,0 +1,707 @@
+/* 基础样式 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #333;
+    overflow: auto;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f5f5f5;
+    padding: 20px;
+}
+
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+
+body {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+/* 主内容容器 */
+.main-content {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    min-height: auto;
+}
+
+/* Logo容器 */
+.logo-container {
+    text-align: center;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* 每日经文容器 */
+.daily-verse-container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.daily-verse {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #333;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+/* 打卡区域 */
+.check-in-section {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.check-in-button {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.check-in-button:hover {
+    background-color: #1557b0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.check-in-count {
+    text-align: center;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 1rem;
+}
+
+.checkin-success .check-in-count {
+    margin-top: 0;
+    margin-bottom: 0;
+    box-shadow: none;
+    background: transparent;
+    border: none;
+}
+
+.checkin-number {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #1a73e8;
+    text-shadow: 0 0 10px rgba(26, 115, 232, 0.2);
+    line-height: 1;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.checkin-label {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.checkin-blessing {
+    font-size: 1rem;
+    color: #4CAF50;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+@keyframes glow {
+    0% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+    50% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+    100% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+}
+
+/* 音乐播放器 */
+.music-player {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    width: auto;
+    max-width: 300px;
+    transform-origin: left bottom;
+}
+
+.music-player.collapsed {
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.music-player.collapsed .music-controls {
+    display: none;
+}
+
+.music-player.collapsed .cross-container {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.music-player.collapsed .cross-beam,
+.music-player.collapsed .cross-vertical {
+    background: #666;
+    transition: all 0.3s ease;
+}
+
+.music-player.collapsed .cross-container:hover .cross-beam,
+.music-player.collapsed .cross-container:hover .cross-vertical {
+    background: #1a73e8;
+    transform: scale(1.1);
+}
+
+/* 十字架容器 */
+.cross-container {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+}
+
+/* 十字架横梁 */
+.cross-beam {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: #1a73e8;
+    transform: translateY(-50%);
+    border-radius: 4px;
+}
+
+/* 十字架竖梁 */
+.cross-vertical {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 8px;
+    height: 100%;
+    background: #1a73e8;
+    transform: translateX(-50%);
+    border-radius: 4px;
+}
+
+/* 光芒效果 */
+.light-rays {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.ray {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.8);
+    width: 2px;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    transform-origin: center;
+    animation: ray-rotate 5s linear infinite;
+}
+
+.ray1 {
+    transform: rotate(30deg);
+}
+
+.ray2 {
+    transform: rotate(60deg);
+}
+
+.ray3 {
+    transform: rotate(90deg);
+}
+
+@keyframes ray-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 收起状态 */
+.music-player.collapsed {
+    width: 60px;
+    height: 60px;
+    padding: 0;
+}
+
+.music-player.collapsed .music-controls {
+    display: none;
+}
+
+.music-player.collapsed .cross-container {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.music-player.collapsed .cross-beam,
+.music-player.collapsed .cross-vertical {
+    background: #666;
+    transition: all 0.3s ease;
+}
+
+.music-player.collapsed .cross-container:hover .cross-beam,
+.music-player.collapsed .cross-container:hover .cross-vertical {
+    background: #1a73e8;
+    transform: scale(1.1);
+}
+
+.music-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.play-pause,
+.resume-music {
+    background: #1a73e8;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.play-pause:hover,
+.resume-music:hover {
+    background: #1557b0;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.volume-control {
+    width: 100%;
+    max-width: 200px;
+}
+
+.volume-slider {
+    width: 100%;
+}
+
+/* 移动端布局优化 */
+@media (max-width: 768px) {
+    .music-player {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .play-pause,
+    .resume-music {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .music-controls {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .play-pause,
+    .resume-music {
+        flex: 1 1 45%;
+        margin: 5px;
+    }
+
+    .volume-control {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .music-player {
+        padding: 15px;
+    }
+
+    .play-pause,
+    .resume-music {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+}
+
+/* 重置按钮 */
+.reset-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+.reset-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.reset-button:hover {
+    background: rgba(149, 117, 205, 0.1);
+}
+
+.reset-button img {
+    width: 40px;
+    height: 40px;
+}
+
+/* 移动端布局优化 */
+@media (max-width: 768px) {
+    .reset-container {
+        bottom: 80px;
+        right: 10px;
+    }
+
+    .music-player {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .main-content {
+        padding-bottom: 160px;
+    }
+
+    .check-in-section {
+        margin-bottom: 20px;
+    }
+}
+
+/* 确认弹窗 */
+.confirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.modal-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-content button:first-child {
+    background: #1a73e8;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.modal-content button:first-child:hover {
+    background: #1557b0;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content button:last-child {
+    background: #eee;
+    color: #333;
+}
+
+/* 成功打卡弹窗 */
+.message-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.message-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.close-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-button:hover {
+    background: #1557b0;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 加载状态 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    backdrop-filter: blur(10px);
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #1a73e8;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.noscript-warning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: #f5222d;
+    color: white;
+    text-align: center;
+    z-index: 10000;
+}
+
+/* 新增打卡成功样式 */
+.checkin-success {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.nfc-animation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: nfcPulse 1.5s ease-in-out;
+    box-shadow: 0 0 0 20px rgba(76, 175, 80, 0.2);
+}
+
+@keyframes nfcPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+.nfc-icon {
+    font-size: 80px;
+    color: #4CAF50;
+    animation: iconBounce 1s ease-in-out;
+}
+
+@keyframes iconBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.nfc-text {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.nfc-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.nfc-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-top: 10px;
+}
+
+.checkin-icon {
+    font-size: 3rem;
+    color: #4CAF50;
+    animation: bounce 0.5s ease;
+}
+
+.checkin-text {
+    text-align: left;
+}
+
+.checkin-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.checkin-subtitle {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* 新增打卡天数样式 */
+.checkin-count {
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    width: 90%;
+}
+
+.checkin-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #1a73e8;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.checkin-label {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.checkin-blessing {
+    font-size: 1rem;
+    color: #4CAF50;
+    font-style: italic;
+    content: "God bless you";
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
