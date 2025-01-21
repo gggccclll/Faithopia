@@ -46,8 +46,8 @@ function handleNFCTag(tagData) {
         nfcPopup.innerHTML = `
             <div class="nfc-icon">📱</div>
             <div class="nfc-text">
-                <div class="nfc-title">NFC签到成功！</div>
-                <div class="nfc-subtitle">愿神祝福你的一天！</div>
+                <div class="nfc-title">NFC successful！</div>
+                <div class="nfc-subtitle">May God bless your day！</div>
             </div>
         `;
         document.body.appendChild(nfcPopup);
@@ -173,7 +173,7 @@ function getTodayDateString() {
 async function fetchDailyVerse() {
     try {
         // 使用fetch API读取本地wenan.txt文件
-        const response = await fetch('/wenan/wenan.txt', {
+        const response = await fetch('./wenan/wenan.txt', {
             mode: 'cors',
             headers: {
                 'Content-Type': 'text/plain',
