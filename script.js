@@ -116,7 +116,7 @@ function changeBackground() {
     document.body.style.backgroundImage = `url(${bgImages[currentBgIndex]})`;
     
     // 添加淡入淡出效果
-    document.body.style.transition = 'background-image 1s ease-in-out';
+    document.body.style.transition = 'background-image 3s ease-in-out';
 }
 
 // 初始化背景
@@ -127,7 +127,7 @@ document.body.style.backgroundRepeat = 'no-repeat';
 document.body.style.backgroundColor = 'transparent';
 
 // 每5秒切换一次背景
-setInterval(changeBackground, 5000);
+setInterval(changeBackground, 10000);
 
 // 初始化页面
 document.addEventListener('DOMContentLoaded', () => {
