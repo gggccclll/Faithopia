@@ -78,7 +78,7 @@ if (isNFCSupported) {
             `);
         }, 10000);
     }).catch(error => {
-        console.error('无法启动NFC扫描:', error);
+        console.error('🙏 Tap your NFC for today’s blessing! ✨:', error);
         showMessage(`
             <div class="nfc-error">
                 <div class="nfc-icon">⚠️</div>
@@ -121,8 +121,8 @@ function handleNFCTag(tagData) {
         nfcPopup.innerHTML = `
             <div class="nfc-icon">📱</div>
             <div class="nfc-text">
-                <div class="nfc-title">NFC签到成功！</div>
-                <div class="nfc-subtitle">愿神祝福你的一天！</div>
+                <div class="nfc-title">NFC Signed in successfully! 🙏！</div>
+                <div class="nfc-subtitle">🙏 May God bless your day! ✨</div>
             </div>
         `;
         document.body.appendChild(nfcPopup);
