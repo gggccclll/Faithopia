@@ -202,7 +202,7 @@ document.body.style.backgroundRepeat = 'no-repeat';
 document.body.style.backgroundColor = 'transparent';
 
 // 每5秒切换一次背景
-setInterval(changeBackground, 5000);
+setInterval(changeBackground, 10000);
 
 // 初始化页面
 document.addEventListener('DOMContentLoaded', () => {
