@@ -7,9 +7,43 @@ let currentMusic = null;
 // NFC功能支持检测
 let isNFCSupported = ('NDEFReader' in window);
 
+// 显示NFC不支持提示
+function showNFCUnsupported() {
+    showMessage(`
+        <div class="nfc-error">
+            <div class="nfc-icon">⚠️</div>
+            <div class="nfc-text">
+                <div class="nfc-title">NFC Not Supported</div>
+                <div class="nfc-subtitle">Your device does not support NFC functionality</div>
+            </div>
+        </div>
+    `);
+}
+
 // NFC初始化
 if (isNFCSupported) {
+    // 请求NFC权限
+    if (typeof navigator.permissions !== 'undefined') {
+        navigator.permissions.query({ name: 'nfc' }).then(permissionStatus => {
+            if (permissionStatus.state === 'denied') {
+                showMessage(`
+                    <div class="nfc-error">
+                        <div class="nfc-icon">⚠️</div>
+                        <div class="nfc-text">
+                            <div class="nfc-title">NFC Permission Denied</div>
+                            <div class="nfc-subtitle">Please enable NFC permissions in your browser settings</div>
+                        </div>
+                    </div>
+                `);
+                return;
+            }
+        });
+    }
+
     const nfcReader = new NDEFReader();
+    
+    // 设置扫描超时
+    let nfcTimeout;
     
     // NFC扫描成功处理
     nfcReader.onreading = event => {
@@ -30,13 +64,54 @@ if (isNFCSupported) {
     // 开始NFC扫描
     nfcReader.scan().then(() => {
         console.log('NFC扫描已启动');
+        
+        // 设置10秒超时
+        nfcTimeout = setTimeout(() => {
+            showMessage(`
+                <div class="nfc-error">
+                    <div class="nfc-icon">⏳</div>
+                    <div class="nfc-text">
+                        <div class="nfc-title">NFC Scan Timeout</div>
+                        <div class="nfc-subtitle">Please try scanning again</div>
+                    </div>
+                </div>
+            `);
+        }, 10000);
     }).catch(error => {
         console.error('无法启动NFC扫描:', error);
+        showMessage(`
+            <div class="nfc-error">
+                <div class="nfc-icon">⚠️</div>
+                <div class="nfc-text">
+                    <div class="nfc-title">NFC Scan Failed</div>
+                    <div class="nfc-subtitle">${error.message}</div>
+                </div>
+            </div>
+        `);
     });
 }
 
 // NFC标签处理
 function handleNFCTag(tagData) {
+    // 清除超时计时器
+    if (nfcTimeout) {
+        clearTimeout(nfcTimeout);
+    }
+    
+    // 验证标签格式
+    if (!tagData || typeof tagData !== 'string') {
+        showMessage(`
+            <div class="nfc-error">
+                <div class="nfc-icon">⚠️</div>
+                <div class="nfc-text">
+                    <div class="nfc-title">Invalid NFC Tag</div>
+                    <div class="nfc-subtitle">Please use a valid check-in tag</div>
+                </div>
+            </div>
+        `);
+        return;
+    }
+
     // 检查是否是签到标签
     if (tagData === 'checkin') {
         checkIn();
@@ -46,8 +121,8 @@ function handleNFCTag(tagData) {
         nfcPopup.innerHTML = `
             <div class="nfc-icon">📱</div>
             <div class="nfc-text">
-                <div class="nfc-title">NFC successful！</div>
-                <div class="nfc-subtitle">May God bless your day！</div>
+                <div class="nfc-title">NFC签到成功！</div>
+                <div class="nfc-subtitle">愿神祝福你的一天！</div>
             </div>
         `;
         document.body.appendChild(nfcPopup);
@@ -127,7 +202,7 @@ document.body.style.backgroundRepeat = 'no-repeat';
 document.body.style.backgroundColor = 'transparent';
 
 // 每5秒切换一次背景
-setInterval(changeBackground, 10000);
+setInterval(changeBackground, 5000);
 
 // 初始化页面
 document.addEventListener('DOMContentLoaded', () => {
@@ -170,23 +245,17 @@ function getTodayDateString() {
 }
 
 // 获取每日经文
-async function fetchDailyVerse() {
+function fetchDailyVerse() {
     try {
-        // 使用fetch API读取本地wenan.txt文件
-        const response = await fetch('./wenan/wenan.txt', {
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'text/plain',
-                'Accept': 'text/plain'
-            },
-            credentials: 'same-origin'
-        });
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', './wenan/wenan.txt', false); // 同步请求
+        xhr.send(null);
         
-        if (!response.ok) {
-            throw new Error(`Failed to load file: ${response.statusText}`);
+        if (xhr.status !== 200) {
+            throw new Error(`Failed to load file: ${xhr.statusText}`);
         }
         
-        const text = await response.text();
+        const text = xhr.responseText;
         
         // 按换行符分割经文
         const verses = text.split('\n');
