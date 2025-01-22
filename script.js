@@ -5,7 +5,20 @@ let musicFiles = [];
 let currentMusic = null;
 
 // NFC功能支持检测
-let isNFCSupported = ('NDEFReader' in window);
+let isNFCSupported = 'NDEFReader' in window;
+
+// 加载Web NFC Polyfill
+if (!isNFCSupported) {
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/web-nfc-polyfill@latest/dist/web-nfc-polyfill.min.js';
+    script.onload = () => {
+        isNFCSupported = true;
+        initNFC();
+    };
+    document.head.appendChild(script);
+} else {
+    initNFC();
+}
 
 // 显示NFC不支持提示
 function showNFCUnsupported() {
@@ -20,8 +33,22 @@ function showNFCUnsupported() {
     `);
 }
 
-// NFC初始化
-if (isNFCSupported) {
+// NFC初始化函数
+function initNFC() {
+    if (!isNFCSupported) return;
+
+    let nfcReader;
+    
+    // 使用原生API或polyfill
+    if ('NDEFReader' in window) {
+        nfcReader = new NDEFReader();
+    } else if (typeof NFC !== 'undefined') {
+        nfcReader = new NFC();
+    } else {
+        showNFCUnsupported();
+        return;
+    }
+
     // 请求NFC权限
     if (typeof navigator.permissions !== 'undefined') {
         navigator.permissions.query({ name: 'nfc' }).then(permissionStatus => {
@@ -39,8 +66,6 @@ if (isNFCSupported) {
             }
         });
     }
-
-    const nfcReader = new NDEFReader();
     
     // 设置扫描超时
     let nfcTimeout;
@@ -58,12 +83,12 @@ if (isNFCSupported) {
 
     // NFC扫描错误处理
     nfcReader.onreadingerror = error => {
-        console.error('NFC读取错误:', error);
+        console.error('NFC read error:', error);
     };
 
     // 开始NFC扫描
     nfcReader.scan().then(() => {
-        console.log('NFC扫描已启动');
+        console.log('NFC scan started');
         
         // 设置10秒超时
         nfcTimeout = setTimeout(() => {
@@ -78,7 +103,7 @@ if (isNFCSupported) {
             `);
         }, 10000);
     }).catch(error => {
-        console.error('🙏 Tap your NFC for today’s blessing! ✨:', error);
+        console.error('Unable to start NFC scan:', error);
         showMessage(`
             <div class="nfc-error">
                 <div class="nfc-icon">⚠️</div>
@@ -90,6 +115,19 @@ if (isNFCSupported) {
         `);
     });
 }
+
+// 预加载动画元素
+const nfcPopup = document.createElement('div');
+nfcPopup.className = 'nfc-animation';
+nfcPopup.innerHTML = `
+    <div class="nfc-icon">📱</div>
+    <div class="nfc-text">
+        <div class="nfc-title">NFC Sign in successfully！</div>
+        <div class="nfc-subtitle">🙏 May God bless your day ✨</div>
+    </div>
+`;
+document.body.appendChild(nfcPopup);
+nfcPopup.style.display = 'none';
 
 // NFC标签处理
 function handleNFCTag(tagData) {
@@ -114,32 +152,27 @@ function handleNFCTag(tagData) {
 
     // 检查是否是签到标签
     if (tagData === 'checkin') {
-        checkIn();
-        // 显示NFC动画弹窗
-        const nfcPopup = document.createElement('div');
-        nfcPopup.className = 'nfc-animation';
-        nfcPopup.innerHTML = `
-            <div class="nfc-icon">📱</div>
-            <div class="nfc-text">
-                <div class="nfc-title">NFC Signed in successfully! 🙏！</div>
-                <div class="nfc-subtitle">🙏 May God bless your day! ✨</div>
-            </div>
-        `;
-        document.body.appendChild(nfcPopup);
+        // 立即显示预加载的动画
+        nfcPopup.style.display = 'flex';
         
-        // 3秒后移除动画并显示成功信息
+        // 异步执行签到逻辑
         setTimeout(() => {
-            nfcPopup.remove();
-            showMessage(`
-                <div class="checkin-success">
-                    <div class="checkin-icon">✓</div>
-                    <div class="checkin-text">
-                        <div class="checkin-title">NFC successful！</div>
-                        <div class="checkin-subtitle">May God bless your day!</div>
+            checkIn();
+            
+            // 1秒后显示成功信息
+            setTimeout(() => {
+                nfcPopup.style.display = 'none';
+                showMessage(`
+                    <div class="checkin-success">
+                        <div class="checkin-icon">✓</div>
+                        <div class="checkin-text">
+                            <div class="checkin-title">NFC successful！</div>
+                            <div class="nfc-subtitle">May God bless your day!</div>
+                        </div>
                     </div>
-                </div>
-            `);
-        }, 3000);
+                `);
+            }, 1000);
+        }, 0);
     }
 }
 
@@ -245,17 +278,13 @@ function getTodayDateString() {
 }
 
 // 获取每日经文
-function fetchDailyVerse() {
+async function fetchDailyVerse() {
     try {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', './wenan/wenan.txt', false); // 同步请求
-        xhr.send(null);
-        
-        if (xhr.status !== 200) {
-            throw new Error(`Failed to load file: ${xhr.statusText}`);
+        const response = await fetch('https://raw.githubusercontent.com/gggccclll/Faithopia/main/wenan/wenan.txt');
+        if (!response.ok) {
+            throw new Error(`Failed to load file: ${response.statusText}`);
         }
-        
-        const text = xhr.responseText;
+        const text = await response.text();
         
         // 按换行符分割经文
         const verses = text.split('\n');
