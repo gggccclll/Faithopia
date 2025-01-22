@@ -219,16 +219,30 @@ const bgImages = [
 ];
 
 function changeBackground() {
-    // 切换到下一张图片
-    currentBgIndex = (currentBgIndex + 1) % bgImages.length;
-    document.body.style.backgroundImage = `url(${bgImages[currentBgIndex]})`;
+    // 创建新的图片元素
+    const newBg = new Image();
+    const randomIndex = Math.floor(Math.random() * bgImages.length);
+    newBg.src = bgImages[randomIndex];
     
-    // 添加淡入淡出效果
-    document.body.style.transition = 'background-image 3s ease-in-out';
+    // 图片加载完成后执行切换
+    newBg.onload = () => {
+        // 添加淡入效果
+        document.body.style.opacity = '0';
+        
+        // 设置新背景
+        setTimeout(() => {
+            document.body.style.backgroundImage = `url(${newBg.src})`;
+            document.body.style.opacity = '1';
+        }, 300);
+    };
+    
+    // 添加平滑过渡效果
+    document.body.style.transition = 'opacity 0.5s ease-in-out, background-image 0.5s ease-in-out';
 }
 
 // 初始化背景
-document.body.style.backgroundImage = `url(${bgImages[0]})`;
+const initialBgIndex = Math.floor(Math.random() * bgImages.length);
+document.body.style.backgroundImage = `url(${bgImages[initialBgIndex]})`;
 document.body.style.backgroundSize = 'cover';
 document.body.style.backgroundPosition = 'center';
 document.body.style.backgroundRepeat = 'no-repeat';
